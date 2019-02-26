@@ -18,6 +18,7 @@ var RENAME_PL_ACTION        = {cmd:"rename-pl",  icon:"edit"};
 var RENAME_FAV_ACTION       = {cmd:"rename-fav", icon:"edit"};
 var EDIT_FAV_ACTION         = {cmd:"edit-fav",   icon:"edit"};
 var ADD_FAV_ACTION          = {cmd:"add-fav",    icon:"favorite_border"};
+var ADD_FAV_FOLDER_ACTION   = {cmd:"add-favdir", icon:"create_new_folder"};
 var DELETE_ACTION           = {cmd:"delete",     icon:"delete"};
 var ADD_TO_FAV_ACTION       = {cmd:"addfav",     icon:"favorite_border"};
 var REMOVE_FROM_FAV_ACTION  = {cmd:"removefav",  icon:"delete_outline"};
@@ -377,6 +378,7 @@ var lmsBrowse = Vue.component("lms-browse", {
             RENAME_FAV_ACTION.title=i18n("Rename");
             EDIT_FAV_ACTION.title=i18n("Edit");
             ADD_FAV_ACTION.title=i18n("Add favorite");
+            ADD_FAV_FOLDER_ACTION.title=i18n("Create folder");
             DELETE_ACTION.title=i18n("Delete");
             ADD_TO_FAV_ACTION.title=i18n("Add to favorites");
             REMOVE_FROM_FAV_ACTION.title=i18n("Remove from favorites");
@@ -586,7 +588,7 @@ var lmsBrowse = Vue.component("lms-browse", {
                     });
                 }
                 if (this.menuActions.length==0 && SECTION_FAVORITES==this.current.section && this.current.isFavFolder) {
-                    this.menuActions=[ADD_FAV_ACTION];
+                    this.menuActions=[ADD_FAV_FOLDER_ACTION, ADD_FAV_ACTION];
                 }
                 if (this.listSize<0) {
                     this.listSize=this.items.length;
@@ -818,6 +820,9 @@ var lmsBrowse = Vue.component("lms-browse", {
                 bus.$emit('addFavorite');
             } else if (act==EDIT_FAV_ACTION.cmd) {
                 bus.$emit('editFavorite', item);
+            } else if (act==ADD_FAV_FOLDER_ACTION.cmd) {
+                this.dialog = { show:true, title:ADD_FAV_FOLDER_ACTION.title, ok: i18n("Create"), cancel:undefined,
+                                command:["favorites", "addlevel", "title:"+TERM_PLACEHOLDER]};
             } else if (act===DELETE_ACTION.cmd) {
                 this.$confirm(i18n("Delete '%1'?", item.title), {buttonTrueText: i18n('Delete'), buttonFalseText: i18n('Cancel')}).then(res => {
                     if (res) {
